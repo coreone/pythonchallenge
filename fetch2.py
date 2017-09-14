@@ -18,7 +18,7 @@ for line in lines:
         numlines = 1
     elif re.search("^\-\->", line):
         incomment = False
-        indata = True
+        indata = False
         numlines = 0
     else:
         if indata:
