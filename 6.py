@@ -33,28 +33,39 @@ def prep(webpage=None, filename=None, directory=None):
     zip_ref.close()
 
 
-def solution(directory=None):
+def solution(filename=None, directory=None):
+    result = ""
+
+    if filename is None:
+        raise Exception("No filename given to prep function.")
+    if directory is None:
+        raise Exception("No directory given to prep function.")
+
     f = open("%s/readme.txt" % directory, "r")
+    zip_ref = zipfile.ZipFile(filename, "r")
+
     data = re.search(r"start from (\d+)", f.read())
     f.close()
     nothing = int(data.group(1))
     while True:
+        result += zip_ref.getinfo("%d.txt" % nothing).comment
         f = open("%s/%d.txt" % (directory, nothing), "r")
         contents = f.read()
         data = re.search(r"Next nothing is (\d+)", contents)
         f.close()
         if data:
+            result += zip_ref.getinfo("%d.txt" % nothing).comment
             nothing = int(data.group(1))
         else:
             print nothing
-            return contents
+            print contents
+
+            return result
             break
+
+    zip_ref.close()
 
 
 prep(url, "6.zip", "6")
 
-# for z in zip_ref.infolist():
-#     print z.comment
-# data = solution("6")
-#
-# print data
+print solution("6.zip", "6")
